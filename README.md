@@ -4,6 +4,7 @@ This module allows you to keep an arbitrary value stored in state, and retain th
 
 ## Usage
 
+### Run 1
 ```
 module "state-keeper" {
   source = "Invicton-Labs/state-keeper/null"
@@ -25,7 +26,6 @@ output "state-keeper" {
 }
 ```
 
-### Run 1
 ```
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 
