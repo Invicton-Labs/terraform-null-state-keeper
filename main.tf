@@ -1,7 +1,7 @@
 // Get the existing state
 module "state" {
   source  = "Invicton-Labs/get-state/null"
-  version = "0.2.2"
+  version = "~> 0.2.2"
   count   = var.read_existing_value ? 1 : 0
 }
 
@@ -53,7 +53,7 @@ locals {
 
 module "assertion" {
   source        = "Invicton-Labs/assertion/null"
-  version       = "0.2.1"
+  version       = "~> 0.2.1"
   condition     = length(local.output_segments) == 2
   error_message = "The state keeper output contains the special separator string: ${random_id.outputs.b64_std}"
 }
