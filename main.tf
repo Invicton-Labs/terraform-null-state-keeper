@@ -1,7 +1,7 @@
 // Get the existing state
 module "state" {
   source  = "Invicton-Labs/get-state/null"
-  version = "0.2.1"
+  version = "0.2.2"
   count   = var.read_existing_value ? 1 : 0
 }
 
