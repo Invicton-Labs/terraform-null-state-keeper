@@ -28,9 +28,10 @@ locals {
 // but the triggers haven't changed, and maintain the same output.
 resource "random_id" "outputs" {
   // Reload the data when the trigger changes
-  keepers = {
+  // We mark this as sensitive just so it doesn't have a massive output in the Terraform plan
+  keepers = sensitive({
     trigger = jsonencode(var.triggers)
-  }
+  })
   byte_length = 1
   // Feed the output values in as prefix. Then we can extract them from the output of this resource,
   // which will only change when the input triggers change
