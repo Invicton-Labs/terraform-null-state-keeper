@@ -1,7 +1,7 @@
 // Get the existing state
 module "state" {
   source  = "Invicton-Labs/get-state/null"
-  version = "~> 0.2.2"
+  version = "~> 0.2.3"
   count   = var.read_existing_value ? 1 : 0
 }
 
@@ -34,8 +34,9 @@ resource "random_id" "outputs" {
   })
   byte_length = 1
   // Feed the output values in as prefix. Then we can extract them from the output of this resource,
-  // which will only change when the input triggers change
-  prefix = "${jsonencode(var.input)}${local.output_separator}${random_uuid.module_id.id}"
+  // which will only change when the input triggers change.
+  // Mark it as sensitive to try to prevent Terraform from outputting massive text blocks into the plan
+  prefix = sensitive("${jsonencode(var.input)}${local.output_separator}${random_uuid.module_id.id}")
   // Changes to the prefix shouldn't trigger a recreate; only the triggers should
   lifecycle {
     ignore_changes = [
@@ -49,12 +50,12 @@ resource "random_id" "outputs" {
 locals {
   // Remove the random ID off the random ID and extract only the prefix
   output_segments = split(local.output_separator, random_id.outputs.b64_std)
-  output          = jsondecode(local.output_segments[0])
+  output          = nonsensitive(jsondecode(local.output_segments[0]))
 }
 
 module "assertion" {
   source        = "Invicton-Labs/assertion/null"
-  version       = "~> 0.2.1"
+  version       = "~> 0.2.8"
   condition     = length(local.output_segments) == 2
   error_message = "The state keeper output contains the special separator string: ${random_id.outputs.b64_std}"
 }
